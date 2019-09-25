@@ -1,6 +1,9 @@
 const score = document.querySelector('.score'),
+    info = document.querySelector('.info'),
     start = document.querySelector('.start'),
     gameArea = document.querySelector('.gameArea'),
+    speed = document.querySelector('.speed'),
+    traffic = document.querySelector('.traffic'),
     car = document.createElement('div'),
     music = document.createElement('audio');
 car.classList.add('car');
@@ -15,7 +18,7 @@ const keys = {
 const setting = {
     start: false,
     score: 0,
-    speed: 5,
+    speed: 3,
     traffic: 3
 };
 
@@ -26,11 +29,33 @@ const models = [
     '../image/enemy4.png'
 ];
 
-start.addEventListener('click', startGame);
+start.addEventListener('click', click);
+
+function click(params) {
+    switch (params.target.textContent) {
+        case 'Hard':
+            setting.speed = 3;
+            setting.traffic = 3;
+            startGame();
+            break;
+        case 'Medium':
+            setting.speed = 2;
+            setting.traffic = 2;
+            startGame();
+            break;
+        default:
+            setting.speed = 1;
+            setting.traffic = 1;
+            startGame();
+            break;
+    }
+}
 
 function startGame(event) {
     while (gameArea.lastChild)
             gameArea.removeChild(gameArea.lastChild);
+    speed.textContent = 'Speed: ' + setting.speed;
+    traffic.textContent = 'Traffic: ' + setting.traffic;
     setting.start = true;
     for (let i = 0; i < getQuantityElements(100); i++) {
         const line = document.createElement('div');
@@ -60,7 +85,8 @@ function startGame(event) {
     document.addEventListener('keydown', keyDown);
     document.addEventListener('keyup', keyUp);
     start.classList.add('hide');
-    score.style.top = 0;
+    info.classList.remove('hide');
+    info.style.top = 0;
     //console.log('Play game!');
     requestAnimationFrame(playGame);
 };
@@ -132,13 +158,18 @@ function moveEnemy() {
             carRect.left <= enemyRect.right) {
                 setting.start = false;
                 start.classList.remove('hide');
-                score.style.top = start.offsetHeight;
+                info.style.top = start.offsetHeight;
                 keys.ArrowUp = false;
                 keys.ArrowDown = false;
                 keys.ArrowLeft = false;
                 keys.ArrowRight = false;
                 document.removeEventListener('keydown', keyDown);
                 document.removeEventListener('keyup', keyUp);
+                let maxScore = localStorage.getItem('score');
+                if (maxScore < setting.score) {
+                    alert('Новый рекорд! ' + setting.score + ' очков.');
+                    localStorage.setItem('score', setting.score);
+                };
                 //console.log('Stop game!');
             }
         enemy.y += setting.speed / 2;
