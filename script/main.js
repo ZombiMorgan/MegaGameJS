@@ -167,7 +167,6 @@ function moveEnemy() {
                 keys.ArrowRight = false;
                 document.removeEventListener('keydown', keyDown);
                 document.removeEventListener('keyup', keyUp);
-                maxScore = localStorage.getItem('score');
                 if (maxScore < setting.score) {
                     alert('Новый рекорд! ' + setting.score + ' очков.');
                     localStorage.setItem('score', setting.score);
