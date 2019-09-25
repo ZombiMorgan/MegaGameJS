@@ -49,7 +49,7 @@ table {
 .car, .enemy, .enemy2 {
     width: 100px;
     height: 80px;
-    background: transparent url(./image/plane.png) center / cover no-repeat;
+    background: transparent url(../image/plane.png) center / cover no-repeat;
     position: absolute;
 }
 

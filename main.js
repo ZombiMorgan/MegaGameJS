@@ -1,7 +1,8 @@
 const score = document.querySelector('.score'),
     start = document.querySelector('.start'),
     gameArea = document.querySelector('.gameArea'),
-    car = document.createElement('div');
+    car = document.createElement('div'),
+    music = document.createElement('audio');
 car.classList.add('car');
 
 const keys = {
@@ -20,18 +21,17 @@ const setting = {
 
 start.addEventListener('click', startGame);
 
-
 function startGame(event) {
     setting.start = !setting.start;
     if (event.target.innerText == 'Start') {
-        for (let i = 0; i < Math.floor(getQuantityElements(100)); i++) {
+        for (let i = 0; i < getQuantityElements(100); i++) {
             const line = document.createElement('div');
             line.classList.add('line');
             line.style.top = (i * 100) + 'px';
             line.y = i * 100;
             gameArea.appendChild(line);
         };
-        for (let i = 0; i < Math.floor(getQuantityElements(100 * (4 - setting.traffic))); i++) {
+        for (let i = 0; i < getQuantityElements(100 * (4 - setting.traffic)); i++) {
             const enemy = document.createElement('div');
             enemy.models = [
                 'transparent url(./image/enemy.png) center / cover no-repeat',
@@ -47,6 +47,9 @@ function startGame(event) {
             enemy.style.background = enemy.models[Math.floor(Math.random() * 4)];
         };
         gameArea.appendChild(car);
+        music.setAttribute('autoplay', true);
+        music.setAttribute('src', './audio/audio.mp3');
+        gameArea.appendChild(music);
         car.maxX = gameArea.offsetWidth - car.offsetWidth;
         car.maxY = gameArea.offsetHeight - car.offsetHeight;
         setting.x = car.offsetLeft = car.maxX / 2;
@@ -95,13 +98,17 @@ function playGame() {
 };
 
 function keyDown(event) {
-    event.preventDefault();
-    keys[event.key] = true;
+    if (event.key in keys) {
+        event.preventDefault();
+        keys[event.key] = true;
+    }
 };
 
 function keyUp(event) {
-    event.preventDefault();
-    keys[event.key] = false;
+    if (event.key in keys) {  
+        event.preventDefault();
+        keys[event.key] = false;
+}
 };
 
 function moveRoad() {
@@ -128,5 +135,5 @@ function moveEnemy() {
 };
 
 function getQuantityElements(heightElement) {
-    return gameArea.clientHeight / heightElement + 1;
+    return Math.floor(gameArea.clientHeight / heightElement + 1);
 };
