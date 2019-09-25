@@ -29,6 +29,8 @@ const models = [
     '../image/enemy4.png'
 ];
 
+let maxScore = (localStorage.getItem('score')) ? localStorage.getItem('score') : '0';
+
 start.addEventListener('click', click);
 
 function click(params) {
@@ -94,7 +96,7 @@ function startGame(event) {
 function playGame() {
     if (setting.start) {
         setting.score = setting.score + Math.floor((setting.traffic + setting.speed) / 2);
-        score.innerHTML = 'SCORE<br>' + setting.score;
+        score.innerHTML = 'SCORE<br>' + maxScore + ' / ' + setting.score;
         moveRoad();
         moveEnemy();
         if (keys.ArrowLeft && setting.x > 0) {
@@ -165,10 +167,11 @@ function moveEnemy() {
                 keys.ArrowRight = false;
                 document.removeEventListener('keydown', keyDown);
                 document.removeEventListener('keyup', keyUp);
-                let maxScore = localStorage.getItem('score');
+                maxScore = localStorage.getItem('score');
                 if (maxScore < setting.score) {
                     alert('Новый рекорд! ' + setting.score + ' очков.');
                     localStorage.setItem('score', setting.score);
+                    maxScore = setting.score;
                 };
                 //console.log('Stop game!');
             }
