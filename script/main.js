@@ -15,15 +15,15 @@ const keys = {
 const setting = {
     start: false,
     score: 0,
-    speed: 2,
-    traffic: 2
+    speed: 10,
+    traffic: 3
 };
 
 start.addEventListener('click', startGame);
 
 function startGame(event) {
     setting.start = !setting.start;
-    if (event.target.innerText == 'Start') {
+    if (setting.start) {
         for (let i = 0; i < getQuantityElements(100); i++) {
             const line = document.createElement('div');
             line.classList.add('line');
@@ -34,21 +34,21 @@ function startGame(event) {
         for (let i = 0; i < getQuantityElements(100 * (4 - setting.traffic)); i++) {
             const enemy = document.createElement('div');
             enemy.models = [
-                'transparent url(./image/enemy.png) center / cover no-repeat',
-                'transparent url(./image/enemy2.png) center / cover no-repeat',
-                'transparent url(./image/enemy3.png) center / cover no-repeat',
-                'transparent url(./image/enemy4.png) center / cover no-repeat'
+                '../image/enemy.png',
+                '../image/enemy2.png',
+                '../image/enemy3.png',
+                '../image/enemy4.png'
             ];
             enemy.classList.add('enemy');
             gameArea.appendChild(enemy);
             enemy.y = (setting.traffic - 4) * 100 * (i + 1);
             enemy.style.top = enemy.y + 'px';
             enemy.style.left = Math.floor(Math.random() * (gameArea.offsetWidth - enemy.offsetWidth)) + 'px';
-            enemy.style.background = enemy.models[Math.floor(Math.random() * 4)];
+            enemy.style.background = `transparent url(${enemy.models[[Math.floor(Math.random() * 4)]]}) center / cover no-repeat`;
         };
         gameArea.appendChild(car);
         music.setAttribute('autoplay', true);
-        music.setAttribute('src', './audio/audio.mp3');
+        music.setAttribute('src', '../audio/audio.mp3');
         gameArea.appendChild(music);
         car.maxX = gameArea.offsetWidth - car.offsetWidth;
         car.maxY = gameArea.offsetHeight - car.offsetHeight;
@@ -116,7 +116,7 @@ function moveRoad() {
     lines.forEach(function(line) {
         line.y += setting.speed;
         line.style.top = line.y + 'px';
-        if (line.y >= gameArea.clientHeight)
+        if (line.y >= gameArea.offsetHeight)
             line.y = 0;
     });
 };
@@ -126,7 +126,7 @@ function moveEnemy() {
     enemies.forEach(function(enemy) {
         enemy.y += setting.speed / 2;
         enemy.style.top = enemy.y + 'px';
-        if (enemy.y >= gameArea.clientHeight) {
+        if (enemy.y >= gameArea.offsetHeight) {
             enemy.y = (setting.traffic - 4) * 100;
             enemy.style.left = Math.floor(Math.random() * (gameArea.offsetWidth - enemy.offsetWidth)) + 'px';
             enemy.style.background = enemy.models[Math.floor(Math.random() * 4)];
@@ -135,5 +135,5 @@ function moveEnemy() {
 };
 
 function getQuantityElements(heightElement) {
-    return Math.floor(gameArea.clientHeight / heightElement + 1);
+    return Math.floor(gameArea.offsetHeight / heightElement + 1);
 };
